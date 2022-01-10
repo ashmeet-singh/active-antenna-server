@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"net/url"
 	"os"
 	"path"
 	"strconv"
@@ -12,16 +13,23 @@ import (
 func main() {
 	http.Handle("/", http.FileServer(http.Dir(os.Getenv("AA_DIR_WEBSITE"))))
 
-	http.HandleFunc("/download", func(w http.ResponseWriter, r *http.Request) {
-		file_path := path.Join(os.Getenv("AA_DIR_STORAGE"), r.Header.Get("X-FILE_PATH-X"))
+	http.HandleFunc("/download/", func(w http.ResponseWriter, r *http.Request) {
+		file_path, err := url.PathUnescape(r.URL.Path[len("/download/"):])
+		if err != nil {
+			fmt.Println("Unable to open file")
+		}
+		file_path = path.Join(os.Getenv("AA_DIR_STORAGE"), file_path)
+		fmt.Println(r.URL.Path)
+		fmt.Println(file_path)
+
 		file, err1 := os.Open(file_path)
 		if err1 != nil {
-			panic("Unable to open file")
+			fmt.Println("Unable to open file")
 		}
 
 		file_stat, err2 := os.Stat(file_path)
 		if err2 != nil {
-			panic("Unable to get stat")
+			fmt.Println("Unable to get stat")
 		}
 
 		w.Header().Set("Content-Type", "application/octet-stream")
