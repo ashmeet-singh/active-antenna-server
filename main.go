@@ -40,11 +40,11 @@ func main() {
 		w.Header().Set("Content-Length", strconv.FormatInt(file_stat.Size(), 10))
 		w.Header().Set("Content-Disposition", "attachment; filename="+path.Base(file_path))
 
+		fmt.Println("Sending file: " + path.Base(file_path))
 		_, err3 := io.Copy(w, file)
 		file.Close()
 		if err3 != nil {
 			fmt.Println("Error while sending file")
-			w.WriteHeader(http.StatusInternalServerError)
 			return
 		}
 		fmt.Println("File sent: " + file_path)
@@ -72,11 +72,11 @@ func main() {
 			return
 		}
 
+		fmt.Println("Receiving file: " + path.Base(file_path))
 		_, err3 := io.Copy(file, r.Body)
 		file.Close()
 		if err3 != nil {
 			fmt.Println("Error while receiving file")
-			w.WriteHeader(http.StatusInternalServerError)
 			return
 		}
 		fmt.Println("File received: " + file_path)
