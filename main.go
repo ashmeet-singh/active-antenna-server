@@ -82,8 +82,8 @@ func main() {
 		fmt.Println("File received: " + file_path)
 	})
 
-    err := http.ListenAndServe(":8080", nil)
-    if err != nil {
-        fmt.Println("Unable to listen and serve")
-    }
+	err := http.ListenAndServe(":8080", nil)
+	if err != nil {
+		fmt.Println("Unable to listen and serve")
+	}
 }
